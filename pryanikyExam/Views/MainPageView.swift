@@ -94,16 +94,16 @@ class MainPageView: UIViewController {
         fetchButton.rx.tap
             .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .subscribe(
-                onNext: {
-                    self.viewModel.getViews()
+                onNext: { [weak self] in
+                    self?.viewModel.getViews()
                 }
             ).disposed(by: bag)
         
         clearButton.rx.tap
             .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .subscribe(
-                onNext: {
-                    let subViews = self.contentStack.subviews
+                onNext: { [weak self] in
+                    guard let subViews = self?.contentStack.subviews else {return}
                     for subview in subViews{
                         subview.removeFromSuperview()
                     }
@@ -113,18 +113,16 @@ class MainPageView: UIViewController {
         fetchWithClearButton.rx.tap
             .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .subscribe(
-                onNext: {
-                    self.clearButton.sendActions(for: .touchUpInside)
-                    self.fetchButton.sendActions(for: .touchUpInside)
+                onNext: { [weak self] in
+                    self?.clearButton.sendActions(for: .touchUpInside)
+                    self?.fetchButton.sendActions(for: .touchUpInside)
                 }
             ).disposed(by: bag)
-        
         
         viewModel.views
             .asDriver(onErrorJustReturn: UIView())
             .drive(onNext: { [weak self] view in
-                guard let self = self else {return}
-                self.contentStack.addArrangedSubview(view)
+                self?.contentStack.addArrangedSubview(view)
             }).disposed(by: bag)
     }
 }

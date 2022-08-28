@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ViewBuilder {
-    let data: [ViewConfig]
-    let view: [String]
+struct ViewBuilder: Decodable {
+    var data: [ViewConfig]
+    var view: [ViewConfigType]
 }

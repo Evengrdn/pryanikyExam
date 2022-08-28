@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ViewConfigType: String {
+enum ViewConfigType: String, Codable {
     case hz
     case picture
     case selector

@@ -16,9 +16,30 @@ class MainPageView: UIViewController {
     
     let fetchButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Fetch data", for: .normal)
+        button.setTitle("Fetch views", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+    
+    let clearButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Clear views", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let fetchWithClearButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Clead and fetch views", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let buttonPanel: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        return stackView
     }()
     
     let scroll: UIScrollView = {
@@ -43,19 +64,20 @@ class MainPageView: UIViewController {
     }
     
     func setupViews() {
-        view.addSubview(fetchButton)
+        view.addSubview(buttonPanel)
+        buttonPanel.addArrangedSubview(fetchButton)
+        buttonPanel.addArrangedSubview(clearButton)
+        buttonPanel.addArrangedSubview(fetchWithClearButton)
         view.addSubview(scroll)
         scroll.addSubview(contentStack)
     }
     
     func setupNSLayoutConstraints() {
         NSLayoutConstraint.activate([
-            fetchButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            fetchButton.widthAnchor.constraint(equalToConstant: 200),
-            fetchButton.heightAnchor.constraint(equalToConstant: 50),
-            fetchButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonPanel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            buttonPanel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            scroll.topAnchor.constraint(equalTo: fetchButton.bottomAnchor, constant: 20),
+            scroll.topAnchor.constraint(equalTo: buttonPanel.bottomAnchor, constant: 20),
             scroll.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scroll.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             scroll.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -76,6 +98,27 @@ class MainPageView: UIViewController {
                     self.viewModel.getViews()
                 }
             ).disposed(by: bag)
+        
+        clearButton.rx.tap
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .subscribe(
+                onNext: {
+                    let subViews = self.contentStack.subviews
+                    for subview in subViews{
+                        subview.removeFromSuperview()
+                    }
+                }
+            ).disposed(by: bag)
+        
+        fetchWithClearButton.rx.tap
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .subscribe(
+                onNext: {
+                    self.clearButton.sendActions(for: .touchUpInside)
+                    self.fetchButton.sendActions(for: .touchUpInside)
+                }
+            ).disposed(by: bag)
+        
         
         viewModel.views
             .asDriver(onErrorJustReturn: UIView())

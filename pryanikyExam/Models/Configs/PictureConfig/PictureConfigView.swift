@@ -7,9 +7,28 @@
 
 import Foundation
 import UIKit
+import RxSwift
+import RxCocoa
+
+protocol ConfigView: UIView {
+    func viewInformation()
+}
+
+//extension ConfigView where Self: UIView {
+//    func viewInformation() {
+//        let alert = UIAlertController(title: "Test", message: "test?", preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
+//            print("asda")
+//        }))
+//    }
+//}
 
 
-class PictureConfigView: UIView {
+class PictureConfigView: UIView, ConfigView {
+    func viewInformation() {
+        print("picture")
+    }
+    
     
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -30,7 +49,6 @@ class PictureConfigView: UIView {
         }
         translatesAutoresizingMaskIntoConstraints = false
         setupNSLayoutConstrains()
-        
     }
     
     func setupNSLayoutConstrains() {

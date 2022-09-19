@@ -8,7 +8,10 @@
 import Foundation
 import UIKit
 
-class SelectorConfigView: UIView, UIPickerViewDataSource, UIPickerViewDelegate  {
+class SelectorConfigView: UIView, UIPickerViewDataSource, UIPickerViewDelegate, ConfigView  {
+    func viewInformation() {
+        print("selector")
+    }
     
     lazy var picker: UIPickerView = {
         let picker = UIPickerView()

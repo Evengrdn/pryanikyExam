@@ -8,10 +8,11 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxGesture
 
 class MainPageView: UIViewController {
     
-    let viewModel = MainPageViewModel()
+    lazy var viewModel = MainPageViewModel(controller: self)
     let bag = DisposeBag()
     
     let fetchButton: UIButton = {

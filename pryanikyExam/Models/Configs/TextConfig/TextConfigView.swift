@@ -8,7 +8,12 @@
 import Foundation
 import UIKit
 
-class TextConfigView: UIView {
+class TextConfigView: UIView, ConfigView {
+    
+    func viewInformation() {
+        print("text")
+    }
+    
     
     lazy var labelView: UILabel = {
         let lable = UILabel()
@@ -40,5 +45,9 @@ class TextConfigView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func aboutMe() -> String{
+        "Text field"
     }
 }
